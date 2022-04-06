@@ -19,10 +19,11 @@ function Base.getindex(r::RollingWindow{T}, i::Int64) where {T <: Any}
 end
 
 function copyList(r::RollingWindow{T}) where {T <: Any}
-    a = Array{T}()
+    a = Array{T,1}()
     for i in 1:size(r.list)[1]
         append!(a, r[i])
     end
+    a
 end
 
 function count(r::RollingWindow{T}) where {T <: Any}
@@ -35,7 +36,7 @@ function add(r::RollingWindow{T}, i::T) where {T <: Any}
         r.mostlyRecentlyRemoved = r.list[r.tail]
         r.list[r.tail] = i 
         r.previousIndex = r.tail
-        r.tail = mod(r.tail + 1, r.size)
+        r.tail = mod(r.tail, r.size) + 1
     else 
         append!(r.list, i)
     end   
