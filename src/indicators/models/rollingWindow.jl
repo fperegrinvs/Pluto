@@ -26,9 +26,7 @@ function copyList(r::RollingWindow{T}) where {T <: Any}
     a
 end
 
-function count(r::RollingWindow{T}) where {T <: Any}
-    size(r.list)[1]
-end
+count(r::RollingWindow{T}) where {T <: Any} = size(r.list)[1]
 
 function add(r::RollingWindow{T}, i::T) where {T <: Any}
     r.samples += 1

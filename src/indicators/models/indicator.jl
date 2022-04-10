@@ -7,21 +7,13 @@ abstract type IndicatorParams end
 abstract type Indicator{T <: Any} end
 abstract type PriceIndicator <: Indicator{Float64} end
 
-function isReady(i::Indicator{T}) where {T <: Any}
-    i.window.samples >= i.params.period 
-end
+isReady(i::Indicator{T}) where {T <: Any} = i.window.samples >= i.params.period
 
-function toString(i::IndicatorParams)
-    string(i.name * i.source * i.period * i.resolution)
-end
+toString(i::IndicatorParams) = string(i.name * i.source * string(i.period) * string(i.resolution))
 
-function key(i::Indicator{T}) where {T <: Any}
-    toString(i.params)
-end
+key(i::Indicator{T}) where {T <: Any} = toString(i.params)
 
-function calculateCurrentValue(i::PriceIndicator, value::Candle)
-    calculateCurrentValue(i, value.close)
-end
+calculateCurrentValue(i::PriceIndicator, value::Candle) = calculateCurrentValue(i, value.close)
 
 function calculateCurrentValue(i::Indicator{T}, candle::T) where {T <: Any}
     throw("unimplemented")
@@ -32,7 +24,6 @@ function processNewCandle(i::Indicator{T}, candle::T) where {T <: Any}
     i.samples += 1
     i.current = calculateCurrentValue(i, candle)
 end
-
 
 function processNewCandle(i::Indicator{T}, candle::T) where {T <: Any}
     add(i.window, candle)
